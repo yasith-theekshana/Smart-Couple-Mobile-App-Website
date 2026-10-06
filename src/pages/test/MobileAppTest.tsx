@@ -1,3 +1,4 @@
+/** @jsxRuntime classic */
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Task, Expense, ShoppingItem, FinanceCategory, Article, ArchivedShoppingList } from './MobileTypes';
@@ -144,7 +145,7 @@ const MobileAppTest: React.FC = () => {
                   transition={{ duration: 1.5, ease: "easeOut" }}
                   className="flex flex-col items-center"
                 >
-                  <img src="/img/smartcouple-icon.png" alt="Logo" className="w-16 h-16 mb-4 filter drop-shadow-lg object-contain" />
+                  <img src={`${import.meta.env.BASE_URL}img/smartcouple-icon.png`} alt="Logo" className="w-16 h-16 mb-4 filter drop-shadow-lg object-contain" />
                   <span className="text-3xl font-serif font-bold tracking-tighter text-gold uppercase mb-2">
                     SMART<span className="text-royal">COUPLE</span>
                   </span>

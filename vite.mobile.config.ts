@@ -4,6 +4,7 @@ import { defineConfig } from 'vite';
 
 // Reuse the shared HTML shell with a dedicated mobile entry point.
 export default defineConfig({
+  base: process.env.MOBILE_BASE_PATH || '/',
   plugins: [
     {
       name: 'mobile-entry',
