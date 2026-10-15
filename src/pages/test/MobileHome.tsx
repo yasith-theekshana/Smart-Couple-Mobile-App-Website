@@ -36,7 +36,7 @@ const MobileHome: React.FC<MobileHomeProps> = ({
       <div className="flex items-center justify-between mb-8">
         <div className="flex flex-col">
           <span className="text-[10px] font-bold text-gold tracking-[0.2em] uppercase">{t.welcome}</span>
-          <h1 className="text-xl font-serif font-bold text-royal">Jean & Monique</h1>
+          <h1 className="text-xl font-serif font-bold text-royal">Florian & Shopie</h1>
         </div>
         <button 
           onClick={() => setIsProfileMenuOpen(true)}

@@ -4,7 +4,7 @@ export interface Task {
   id: string;
   name: string;
   category: string;
-  assignedTo: 'Jean' | 'Monique' | 'Jean & Monique';
+  assignedTo: 'Florian' | 'Shopie' | 'Florian & Shopie';
   date: string;
   status: 'À faire' | 'Terminé';
   isRecurrent?: boolean;

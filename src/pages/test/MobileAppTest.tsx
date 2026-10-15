@@ -20,13 +20,13 @@ const MobileAppTest: React.FC = () => {
 
   // Global State (shared across components)
   const [tasks, setTasks] = useState<Task[]>([
-    { id: 'task-1', name: 'Préparer le petit-déjeuner', category: 'Cuisine', assignedTo: 'Jean', date: '2026-04-06', status: 'À faire', isRecurrent: true },
-    { id: 'task-2', name: 'Préparer le dîner', category: 'Cuisine', assignedTo: 'Monique', date: '2026-04-06', status: 'À faire', isRecurrent: true },
-    { id: 'task-3', name: 'Lessive', category: 'Vêtements', assignedTo: 'Jean', date: '2026-04-07', status: 'Terminé', isRecurrent: false },
-    { id: 'task-4', name: 'Repasser les vêtements', category: 'Vêtements', assignedTo: 'Monique', date: '2026-04-08', status: 'Terminé', isRecurrent: false },
-    { id: 'task-5', name: 'Tondre la pelouse', category: 'Jardin', assignedTo: 'Jean', date: '2026-04-11', status: 'À faire', isRecurrent: false },
-    { id: 'task-6', name: 'Nettoyer la salle de bain', category: 'Salle de bain', assignedTo: 'Monique', date: '2026-04-11', status: 'À faire', isRecurrent: true },
-    { id: 'task-7', name: 'Faire les courses', category: 'Autres', assignedTo: 'Jean & Monique', date: '2026-04-11', status: 'À faire', isRecurrent: true },
+    { id: 'task-1', name: 'Préparer le petit-déjeuner', category: 'Cuisine', assignedTo: 'Florian', date: '2026-04-06', status: 'À faire', isRecurrent: true },
+    { id: 'task-2', name: 'Préparer le dîner', category: 'Cuisine', assignedTo: 'Shopie', date: '2026-04-06', status: 'À faire', isRecurrent: true },
+    { id: 'task-3', name: 'Lessive', category: 'Vêtements', assignedTo: 'Florian', date: '2026-04-07', status: 'Terminé', isRecurrent: false },
+    { id: 'task-4', name: 'Repasser les vêtements', category: 'Vêtements', assignedTo: 'Shopie', date: '2026-04-08', status: 'Terminé', isRecurrent: false },
+    { id: 'task-5', name: 'Tondre la pelouse', category: 'Jardin', assignedTo: 'Florian', date: '2026-04-11', status: 'À faire', isRecurrent: false },
+    { id: 'task-6', name: 'Nettoyer la salle de bain', category: 'Salle de bain', assignedTo: 'Shopie', date: '2026-04-11', status: 'À faire', isRecurrent: true },
+    { id: 'task-7', name: 'Faire les courses', category: 'Autres', assignedTo: 'Florian & Shopie', date: '2026-04-11', status: 'À faire', isRecurrent: true },
   ]);
 
   const [shoppingItems, setShoppingItems] = useState<ShoppingItem[]>([
@@ -65,13 +65,13 @@ const MobileAppTest: React.FC = () => {
   ]);
 
   const [budget, setBudget] = useState(5800);
-  const [jeanContribution, setJeanContribution] = useState(3000);
-  const [moniqueContribution, setMoniqueContribution] = useState(2800);
+  const [florianContribution, setFlorianContribution] = useState(3000);
+  const [shopieContribution, setShopieContribution] = useState(2800);
   const [expenses, setExpenses] = useState<Expense[]>([
-    { id: 'exp-1', desc: 'Loyer Avril', cat: 'Loyer', amt: 1250, rec: true, owner: 'Jean', date: '2026-04-01' },
-    { id: 'exp-2', desc: 'Courses Bio', cat: 'Courses', amt: 84.50, rec: false, owner: 'Monique', date: '2026-04-05' },
-    { id: 'exp-3', desc: 'Netflix', cat: 'Abos', amt: 17.99, rec: true, owner: 'Jean', date: '2026-04-10' },
-    { id: 'exp-4', desc: 'Plein Essence', cat: 'Essence', amt: 75.00, rec: false, owner: 'Jean', date: '2026-04-12' },
+    { id: 'exp-1', desc: 'Loyer Avril', cat: 'Loyer', amt: 1250, rec: true, owner: 'Florian', date: '2026-04-01' },
+    { id: 'exp-2', desc: 'Courses Bio', cat: 'Courses', amt: 84.50, rec: false, owner: 'Shopie', date: '2026-04-05' },
+    { id: 'exp-3', desc: 'Netflix', cat: 'Abos', amt: 17.99, rec: true, owner: 'Florian', date: '2026-04-10' },
+    { id: 'exp-4', desc: 'Plein Essence', cat: 'Essence', amt: 75.00, rec: false, owner: 'Florian', date: '2026-04-12' },
   ]);
 
   const [financeCategories, setFinanceCategories] = useState<FinanceCategory[]>([
@@ -175,8 +175,8 @@ const MobileAppTest: React.FC = () => {
                   <MobileFinances 
                     onBack={() => setActiveTab('menu')} tab={financeTab} setTab={setFinanceTab}
                     budget={budget} setBudget={setBudget}
-                    jeanContribution={jeanContribution} setJeanContribution={setJeanContribution}
-                    moniqueContribution={moniqueContribution} setMoniqueContribution={setMoniqueContribution}
+                    florianContribution={florianContribution} setFlorianContribution={setFlorianContribution}
+                    shopieContribution={shopieContribution} setShopieContribution={setShopieContribution}
                     expenses={expenses} setExpenses={setExpenses}
                     financeCategories={financeCategories} setFinanceCategories={setFinanceCategories}
                     lang={lang}
@@ -261,7 +261,7 @@ const MobileAppTest: React.FC = () => {
                       <i className="fa-solid fa-camera text-white"></i>
                     </div>
                   </div>
-                  <h3 className="text-lg font-serif font-bold text-royal mb-0.5">Jean & Monique</h3>
+                  <h3 className="text-lg font-serif font-bold text-royal mb-0.5">Florian & Shopie</h3>
                   <span className="px-2.5 py-0.5 bg-gold/10 text-gold text-[8px] font-bold uppercase tracking-widest rounded-full">Couple Premium v.25</span>
                 </div>
                 

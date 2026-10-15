@@ -9,10 +9,10 @@ interface MobileFinancesProps {
   setTab: (tab: 'dashboard' | 'expenses' | 'debts' | 'analysis') => void;
   budget: number;
   setBudget: (val: number) => void;
-  jeanContribution: number;
-  setJeanContribution: (val: number) => void;
-  moniqueContribution: number;
-  setMoniqueContribution: (val: number) => void;
+  florianContribution: number;
+  setFlorianContribution: (val: number) => void;
+  shopieContribution: number;
+  setShopieContribution: (val: number) => void;
   expenses: Expense[];
   setExpenses: (val: Expense[]) => void;
   financeCategories: FinanceCategory[];
@@ -26,10 +26,10 @@ const MobileFinances: React.FC<MobileFinancesProps> = ({
   setTab: setFinanceTab,
   budget,
   setBudget,
-  jeanContribution,
-  setJeanContribution,
-  moniqueContribution,
-  setMoniqueContribution,
+  florianContribution,
+  setFlorianContribution,
+  shopieContribution,
+  setShopieContribution,
   expenses,
   setExpenses,
   financeCategories,
@@ -47,9 +47,9 @@ const MobileFinances: React.FC<MobileFinancesProps> = ({
   
   const [newExpDesc, setNewExpDesc] = useState('');
   const [newExpCat, setNewExpCat] = useState('Courses');
-  const [newExpOwner, setNewExpOwner] = useState<'Jean' | 'Monique' | 'Both'>('Jean');
-  const [newExpAmtJean, setNewExpAmtJean] = useState(0);
-  const [newExpAmtMonique, setNewExpAmtMonique] = useState(0);
+  const [newExpOwner, setNewExpOwner] = useState<'Florian' | 'Shopie' | 'Both'>('Florian');
+  const [newExpAmtFlorian, setNewExpAmtFlorian] = useState(0);
+  const [newExpAmtShopie, setNewExpAmtShopie] = useState(0);
   const [newExpIsRecurrent, setNewExpIsRecurrent] = useState(false);
   const [newExpDate, setNewExpDate] = useState(new Date().toISOString().split('T')[0]);
 
@@ -65,9 +65,9 @@ const MobileFinances: React.FC<MobileFinancesProps> = ({
 
   const [isAddingDebtBalance, setIsAddingDebtBalance] = useState(false);
   const [debtBalances, setDebtBalances] = useState([
-    { id: 'debt-1', month: lang === 'fr' ? 'Avril' : 'April', jeanOwes: 0, moniqueOwes: 0, settled: true }
+    { id: 'debt-1', month: lang === 'fr' ? 'Avril' : 'April', florianOwes: 0, shopieOwes: 0, settled: true }
   ]);
-  const [newDebt, setNewDebt] = useState({ month: currentMonths[new Date().getMonth()], jeanOwes: 0, moniqueOwes: 0 });
+  const [newDebt, setNewDebt] = useState({ month: currentMonths[new Date().getMonth()], florianOwes: 0, shopieOwes: 0 });
 
   // Calculations
   const filteredExpenses = expenses.filter(exp => {
@@ -78,7 +78,7 @@ const MobileFinances: React.FC<MobileFinancesProps> = ({
   });
 
   const groupedExpenses = useMemo(() => {
-    const groups: { [key: string]: { desc: string, cat: string, date: string, rec: boolean, jeanAmt: number, moniqueAmt: number, entries: string[] } } = {};
+    const groups: { [key: string]: { desc: string, cat: string, date: string, rec: boolean, florianAmt: number, shopieAmt: number, entries: string[] } } = {};
     
     filteredExpenses.forEach(exp => {
       const key = `${exp.desc}-${exp.date}-${exp.cat}-${exp.rec}`;
@@ -88,13 +88,13 @@ const MobileFinances: React.FC<MobileFinancesProps> = ({
           cat: exp.cat,
           date: exp.date,
           rec: exp.rec,
-          jeanAmt: 0,
-          moniqueAmt: 0,
+          florianAmt: 0,
+          shopieAmt: 0,
           entries: []
         };
       }
-      if (exp.owner === 'Jean') groups[key].jeanAmt += exp.amt;
-      if (exp.owner === 'Monique') groups[key].moniqueAmt += exp.amt;
+      if (exp.owner === 'Florian') groups[key].florianAmt += exp.amt;
+      if (exp.owner === 'Shopie') groups[key].shopieAmt += exp.amt;
       groups[key].entries.push(exp.id);
     });
     
@@ -106,19 +106,19 @@ const MobileFinances: React.FC<MobileFinancesProps> = ({
 
   const totalExpenses = filteredExpenses.reduce((sum, exp) => sum + exp.amt, 0);
   
-  const jeanExpenses = filteredExpenses.filter(e => e.owner === 'Jean').reduce((sum, exp) => sum + exp.amt, 0);
-  const moniqueExpenses = filteredExpenses.filter(e => e.owner === 'Monique').reduce((sum, exp) => sum + exp.amt, 0);
-  const totalOwnerExpenses = jeanExpenses + moniqueExpenses;
+  const florianExpenses = filteredExpenses.filter(e => e.owner === 'Florian').reduce((sum, exp) => sum + exp.amt, 0);
+  const shopieExpenses = filteredExpenses.filter(e => e.owner === 'Shopie').reduce((sum, exp) => sum + exp.amt, 0);
+  const totalOwnerExpenses = florianExpenses + shopieExpenses;
   
-  const jeanExpPercent = totalOwnerExpenses > 0 ? Math.round((jeanExpenses / totalOwnerExpenses) * 100) : 0;
-  const moniqueExpPercent = totalOwnerExpenses > 0 ? Math.round((moniqueExpenses / totalOwnerExpenses) * 100) : 0;
+  const florianExpPercent = totalOwnerExpenses > 0 ? Math.round((florianExpenses / totalOwnerExpenses) * 100) : 0;
+  const shopieExpPercent = totalOwnerExpenses > 0 ? Math.round((shopieExpenses / totalOwnerExpenses) * 100) : 0;
 
-  const jeanSavings = jeanContribution - jeanExpenses;
-  const moniqueSavings = moniqueContribution - moniqueExpenses;
-  const totalOwnerSavings = jeanSavings + moniqueSavings;
+  const florianSavings = florianContribution - florianExpenses;
+  const shopieSavings = shopieContribution - shopieExpenses;
+  const totalOwnerSavings = florianSavings + shopieSavings;
 
-  const jeanSavingsPercent = totalOwnerSavings > 0 ? Math.round((jeanSavings / totalOwnerSavings) * 100) : 0;
-  const moniqueSavingsPercent = totalOwnerSavings > 0 ? Math.round((moniqueSavings / totalOwnerSavings) * 100) : 0;
+  const florianSavingsPercent = totalOwnerSavings > 0 ? Math.round((florianSavings / totalOwnerSavings) * 100) : 0;
+  const shopieSavingsPercent = totalOwnerSavings > 0 ? Math.round((shopieSavings / totalOwnerSavings) * 100) : 0;
 
   return (
     <motion.div
@@ -206,14 +206,14 @@ const MobileFinances: React.FC<MobileFinancesProps> = ({
                 {lang === 'fr' ? 'Répartition' : 'Allocation'}
               </h3>
               
-              {/* Jean */}
+              {/* Florian */}
               <div className="bg-white border-2 border-gold p-6 rounded-2xl shadow-soft">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-royal/10 flex items-center justify-center">
                       <i className="fa-solid fa-user text-royal text-xs"></i>
                     </div>
-                    <span className="text-[12px] font-bold text-royal uppercase tracking-widest">Jean</span>
+                    <span className="text-[12px] font-bold text-royal uppercase tracking-widest">Florian</span>
                   </div>
                   <div className="flex items-center gap-2 px-3 py-1 bg-gold/10 rounded-full">
                     <i className="fa-solid fa-repeat text-[8px] text-gold"></i>
@@ -225,22 +225,22 @@ const MobileFinances: React.FC<MobileFinancesProps> = ({
                 <div className="flex items-center gap-2">
                   <input 
                     type="number" 
-                    value={jeanContribution} 
-                    onChange={(e) => setJeanContribution(Number(e.target.value))}
+                    value={florianContribution} 
+                    onChange={(e) => setFlorianContribution(Number(e.target.value))}
                     className="text-2xl font-serif font-bold text-royal border-b-2 border-gold focus:border-gold outline-none w-24 transition-all lining-nums"
                   />
                   <span className="text-base font-bold text-gold">€</span>
                 </div>
               </div>
 
-              {/* Monique */}
+              {/* Shopie */}
               <div className="bg-white border-2 border-gold p-6 rounded-2xl shadow-soft">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center">
                       <i className="fa-solid fa-user text-gold text-xs"></i>
                     </div>
-                    <span className="text-[12px] font-bold text-royal uppercase tracking-widest">Monique</span>
+                    <span className="text-[12px] font-bold text-royal uppercase tracking-widest">Shopie</span>
                   </div>
                   <div className="flex items-center gap-2 px-3 py-1 bg-gold/10 rounded-full">
                     <i className="fa-solid fa-repeat text-[8px] text-gold"></i>
@@ -252,8 +252,8 @@ const MobileFinances: React.FC<MobileFinancesProps> = ({
                 <div className="flex items-center gap-2">
                   <input 
                     type="number" 
-                    value={moniqueContribution} 
-                    onChange={(e) => setMoniqueContribution(Number(e.target.value))}
+                    value={shopieContribution} 
+                    onChange={(e) => setShopieContribution(Number(e.target.value))}
                     className="text-2xl font-serif font-bold text-royal border-b-2 border-gold focus:border-gold outline-none w-24 transition-all lining-nums"
                   />
                   <span className="text-base font-bold text-gold">€</span>
@@ -310,8 +310,8 @@ const MobileFinances: React.FC<MobileFinancesProps> = ({
               <div className="flex items-center justify-between px-4 py-3 bg-gray-50 border-b-2 border-gray-200">
                 <span className="text-[10px] font-bold text-royal uppercase tracking-widest flex-1">Transaction</span>
                 <div className="flex items-center gap-2 w-1/2 justify-end">
-                  <span className="text-[10px] font-bold text-gold uppercase tracking-widest w-20 text-right">Jean</span>
-                  <span className="text-[10px] font-bold text-royal uppercase tracking-widest w-20 text-right">Monique</span>
+                  <span className="text-[10px] font-bold text-gold uppercase tracking-widest w-20 text-right">Florian</span>
+                  <span className="text-[10px] font-bold text-royal uppercase tracking-widest w-20 text-right">Shopie</span>
                   <div className="w-6"></div> {/* Spacer for trash icon */}
                 </div>
               </div>
@@ -332,8 +332,8 @@ const MobileFinances: React.FC<MobileFinancesProps> = ({
                     </div>
                     
                     <div className="flex items-center gap-2 w-1/2 justify-end">
-                      <span className="text-[11px] font-bold text-gold w-20 text-right lining-nums">{group.jeanAmt.toFixed(2)}€</span>
-                      <span className="text-[11px] font-bold text-royal w-20 text-right lining-nums">{group.moniqueAmt.toFixed(2)}€</span>
+                      <span className="text-[11px] font-bold text-gold w-20 text-right lining-nums">{group.florianAmt.toFixed(2)}€</span>
+                      <span className="text-[11px] font-bold text-royal w-20 text-right lining-nums">{group.shopieAmt.toFixed(2)}€</span>
                       
                       <button 
                         onClick={() => setExpenses(expenses.filter(e => !group.entries.includes(e.id)))}
@@ -401,10 +401,10 @@ const MobileFinances: React.FC<MobileFinancesProps> = ({
                           {lang === 'fr' ? 'Mois' : 'Month'} <i className="fa-solid fa-chevron-down ml-1 text-[7px]"></i>
                         </th>
                         <th className="py-4 text-[9px] font-bold uppercase tracking-widest">
-                          <span className="text-royal">Jean</span> <span className="text-gold">{lang === 'fr' ? 'doit' : 'owes'}</span> <span className="text-royal">Monique</span>
+                          <span className="text-royal">Florian</span> <span className="text-gold">{lang === 'fr' ? 'doit' : 'owes'}</span> <span className="text-royal">Shopie</span>
                         </th>
                         <th className="py-4 text-[9px] font-bold uppercase tracking-widest">
-                          <span className="text-royal">Monique</span> <span className="text-gold">{lang === 'fr' ? 'doit' : 'owes'}</span> <span className="text-royal">Jean</span>
+                          <span className="text-royal">Shopie</span> <span className="text-gold">{lang === 'fr' ? 'doit' : 'owes'}</span> <span className="text-royal">Florian</span>
                         </th>
                         <th className="py-4 text-[9px] font-bold text-gold uppercase tracking-widest text-center">
                           {lang === 'fr' ? 'Réglement' : 'Settle'}
@@ -417,8 +417,8 @@ const MobileFinances: React.FC<MobileFinancesProps> = ({
                           <td className="py-5 text-[11px] font-bold text-royal">
                             {debt.month === 'Avril' && lang === 'en' ? 'April' : debt.month}
                           </td>
-                          <td className="py-5 text-[11px] font-bold text-royal lining-nums">{debt.jeanOwes}€</td>
-                          <td className="py-5 text-[11px] font-bold text-royal lining-nums">{debt.moniqueOwes}€</td>
+                          <td className="py-5 text-[11px] font-bold text-royal lining-nums">{debt.florianOwes}€</td>
+                          <td className="py-5 text-[11px] font-bold text-royal lining-nums">{debt.shopieOwes}€</td>
                           <td className="py-5 text-center">
                             <button 
                               onClick={() => setDebtBalances(debtBalances.map(d => d.id === debt.id ? { ...d, settled: !d.settled } : d))}
@@ -446,20 +446,20 @@ const MobileFinances: React.FC<MobileFinancesProps> = ({
                         />
                       </div>
                       <div className="space-y-2">
-                        <label className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">{lang === 'fr' ? 'Jean doit' : 'Jean owes'}</label>
+                        <label className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">{lang === 'fr' ? 'Florian doit' : 'Florian owes'}</label>
                         <input 
                           type="number" 
-                          value={newDebt.jeanOwes}
-                          onChange={e => setNewDebt({ ...newDebt, jeanOwes: Number(e.target.value) })}
+                          value={newDebt.florianOwes}
+                          onChange={e => setNewDebt({ ...newDebt, florianOwes: Number(e.target.value) })}
                           className="w-full bg-white border-2 border-gold/20 rounded-lg px-3 py-2 text-[11px] outline-none font-bold text-royal focus:border-gold"
                         />
                       </div>
                       <div className="space-y-2">
-                        <label className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">{lang === 'fr' ? 'Monique doit' : 'Monique owes'}</label>
+                        <label className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">{lang === 'fr' ? 'Shopie doit' : 'Shopie owes'}</label>
                         <input 
                           type="number" 
-                          value={newDebt.moniqueOwes}
-                          onChange={e => setNewDebt({ ...newDebt, moniqueOwes: Number(e.target.value) })}
+                          value={newDebt.shopieOwes}
+                          onChange={e => setNewDebt({ ...newDebt, shopieOwes: Number(e.target.value) })}
                           className="w-full bg-white border-2 border-gold/20 rounded-lg px-3 py-2 text-[11px] outline-none font-bold text-royal focus:border-gold"
                         />
                       </div>
@@ -554,25 +554,25 @@ const MobileFinances: React.FC<MobileFinancesProps> = ({
             <div className="space-y-6">
               <div className="bg-white border-2 border-gold p-6 rounded-3xl shadow-soft">
                 <div className="h-56 relative mb-6 border-b-2 border-gold/20">
-                  {/* Jean Bar */}
+                  {/* Florian Bar */}
                   <div className="absolute bottom-0 left-[15%] w-16 flex flex-col items-center">
                     <motion.div 
                       initial={{ height: 0 }}
-                      animate={{ height: Math.max(10, (jeanExpenses / totalOwnerExpenses) * 160) }}
+                      animate={{ height: Math.max(10, (florianExpenses / totalOwnerExpenses) * 160) }}
                       transition={{ duration: 1, ease: "backOut" }}
                       className="w-full bg-gold rounded-t-xl shadow-sm"
                     ></motion.div>
-                    <span className="text-[9px] font-bold text-gray-400 uppercase mt-3">Jean</span>
+                    <span className="text-[9px] font-bold text-gray-400 uppercase mt-3">Florian</span>
                   </div>
-                  {/* Monique Bar */}
+                  {/* Shopie Bar */}
                   <div className="absolute bottom-0 right-[15%] w-16 flex flex-col items-center">
                     <motion.div 
                       initial={{ height: 0 }}
-                      animate={{ height: Math.max(10, (moniqueExpenses / totalOwnerExpenses) * 160) }}
+                      animate={{ height: Math.max(10, (shopieExpenses / totalOwnerExpenses) * 160) }}
                       transition={{ duration: 1, ease: "backOut", delay: 0.2 }}
                       className="w-full bg-royal rounded-t-xl shadow-sm"
                     ></motion.div>
-                    <span className="text-[9px] font-bold text-gray-400 uppercase mt-3">Monique</span>
+                    <span className="text-[9px] font-bold text-gray-400 uppercase mt-3">Shopie</span>
                   </div>
                 </div>
                 <h4 className="text-[11px] font-bold text-royal text-center uppercase tracking-widest mb-6">
@@ -580,17 +580,17 @@ const MobileFinances: React.FC<MobileFinancesProps> = ({
                 </h4>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between bg-bgGray border-2 border-gold/10 p-3 rounded-xl">
-                    <span className="text-[10px] font-bold text-royal uppercase">Jean</span>
+                    <span className="text-[10px] font-bold text-royal uppercase">Florian</span>
                     <div className="flex gap-4">
-                      <span className="text-[10px] font-bold text-royal lining-nums">{jeanExpenses.toLocaleString()}€</span>
-                      <span className="text-[10px] font-bold text-gold lining-nums">{jeanExpPercent}%</span>
+                      <span className="text-[10px] font-bold text-royal lining-nums">{florianExpenses.toLocaleString()}€</span>
+                      <span className="text-[10px] font-bold text-gold lining-nums">{florianExpPercent}%</span>
                     </div>
                   </div>
                   <div className="flex items-center justify-between bg-bgGray border-2 border-gold/10 p-3 rounded-xl">
-                    <span className="text-[10px] font-bold text-royal uppercase">Monique</span>
+                    <span className="text-[10px] font-bold text-royal uppercase">Shopie</span>
                     <div className="flex gap-4">
-                      <span className="text-[10px] font-bold text-royal lining-nums">{moniqueExpenses.toLocaleString()}€</span>
-                      <span className="text-[10px] font-bold text-royal/40 lining-nums">{moniqueExpPercent}%</span>
+                      <span className="text-[10px] font-bold text-royal lining-nums">{shopieExpenses.toLocaleString()}€</span>
+                      <span className="text-[10px] font-bold text-royal/40 lining-nums">{shopieExpPercent}%</span>
                     </div>
                   </div>
                 </div>
@@ -601,25 +601,25 @@ const MobileFinances: React.FC<MobileFinancesProps> = ({
             <div className="space-y-6">
               <div className="bg-white border-2 border-gold p-6 rounded-3xl shadow-soft">
                 <div className="h-56 relative mb-6 border-b-2 border-gold/20">
-                  {/* Jean Bar */}
+                  {/* Florian Bar */}
                   <div className="absolute bottom-0 left-[15%] w-16 flex flex-col items-center">
                     <motion.div 
                       initial={{ height: 0 }}
-                      animate={{ height: Math.max(10, (jeanSavings / totalOwnerSavings) * 160) }}
+                      animate={{ height: Math.max(10, (florianSavings / totalOwnerSavings) * 160) }}
                       transition={{ duration: 1, ease: "backOut" }}
                       className="w-full bg-gold rounded-t-xl shadow-sm"
                     ></motion.div>
-                    <span className="text-[9px] font-bold text-gray-400 uppercase mt-3">Jean</span>
+                    <span className="text-[9px] font-bold text-gray-400 uppercase mt-3">Florian</span>
                   </div>
-                  {/* Monique Bar */}
+                  {/* Shopie Bar */}
                   <div className="absolute bottom-0 right-[15%] w-16 flex flex-col items-center">
                     <motion.div 
                       initial={{ height: 0 }}
-                      animate={{ height: Math.max(10, (moniqueSavings / totalOwnerSavings) * 160) }}
+                      animate={{ height: Math.max(10, (shopieSavings / totalOwnerSavings) * 160) }}
                       transition={{ duration: 1, ease: "backOut", delay: 0.2 }}
                       className="w-full bg-royal rounded-t-xl shadow-sm"
                     ></motion.div>
-                    <span className="text-[9px] font-bold text-gray-400 uppercase mt-3">Monique</span>
+                    <span className="text-[9px] font-bold text-gray-400 uppercase mt-3">Shopie</span>
                   </div>
                 </div>
                 <h4 className="text-[11px] font-bold text-royal text-center uppercase tracking-widest mb-6">
@@ -627,17 +627,17 @@ const MobileFinances: React.FC<MobileFinancesProps> = ({
                 </h4>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between bg-bgGray border-2 border-gold/10 p-3 rounded-xl">
-                    <span className="text-[10px] font-bold text-royal uppercase">Jean</span>
+                    <span className="text-[10px] font-bold text-royal uppercase">Florian</span>
                     <div className="flex gap-4">
-                      <span className="text-[10px] font-bold text-royal lining-nums">{jeanSavings.toLocaleString()}€</span>
-                      <span className="text-[10px] font-bold text-gold lining-nums">{jeanSavingsPercent}%</span>
+                      <span className="text-[10px] font-bold text-royal lining-nums">{florianSavings.toLocaleString()}€</span>
+                      <span className="text-[10px] font-bold text-gold lining-nums">{florianSavingsPercent}%</span>
                     </div>
                   </div>
                   <div className="flex items-center justify-between bg-bgGray border-2 border-gold/10 p-3 rounded-xl">
-                    <span className="text-[10px] font-bold text-royal uppercase">Monique</span>
+                    <span className="text-[10px] font-bold text-royal uppercase">Shopie</span>
                     <div className="flex gap-4">
-                      <span className="text-[10px] font-bold text-royal lining-nums">{moniqueSavings.toLocaleString()}€</span>
-                      <span className="text-[10px] font-bold text-royal/40 lining-nums">{moniqueSavingsPercent}%</span>
+                      <span className="text-[10px] font-bold text-royal lining-nums">{shopieSavings.toLocaleString()}€</span>
+                      <span className="text-[10px] font-bold text-royal/40 lining-nums">{shopieSavingsPercent}%</span>
                     </div>
                   </div>
                 </div>
@@ -716,7 +716,7 @@ const MobileFinances: React.FC<MobileFinancesProps> = ({
                         {lang === 'fr' ? 'RESPONSABLE' : 'RESPONSIBLE'}
                       </label>
                       <div className="grid grid-cols-3 gap-3">
-                        {['Jean', 'Monique', 'Both'].map((owner) => (
+                        {['Florian', 'Shopie', 'Both'].map((owner) => (
                           <button key={owner} onClick={() => setNewExpOwner(owner as any)} className={`py-3 rounded-xl text-[9px] font-bold uppercase tracking-widest transition-all ${newExpOwner === owner ? 'bg-royal text-white shadow-md' : 'bg-bgGray text-royal/40'}`}>
                             {owner === 'Both' ? (lang === 'fr' ? 'Les deux' : 'Both') : owner}
                           </button>
@@ -724,23 +724,23 @@ const MobileFinances: React.FC<MobileFinancesProps> = ({
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
-                      {(newExpOwner === 'Jean' || newExpOwner === 'Both') && (
+                      {(newExpOwner === 'Florian' || newExpOwner === 'Both') && (
                         <div className="space-y-2">
                           <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">
                             {lang === 'fr' ? 'MONTANT JEAN' : 'JEAN AMOUNT'}
                           </label>
                           <div className="relative">
-                            <input type="number" value={newExpAmtJean || ''} onChange={(e) => setNewExpAmtJean(Number(e.target.value))} className="w-full px-4 py-4 bg-bgGray border-2 border-gold/20 rounded-2xl text-xs text-royal outline-none font-bold"/><span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-gold">€</span>
+                            <input type="number" value={newExpAmtFlorian || ''} onChange={(e) => setNewExpAmtFlorian(Number(e.target.value))} className="w-full px-4 py-4 bg-bgGray border-2 border-gold/20 rounded-2xl text-xs text-royal outline-none font-bold"/><span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-gold">€</span>
                           </div>
                         </div>
                       )}
-                      {(newExpOwner === 'Monique' || newExpOwner === 'Both') && (
+                      {(newExpOwner === 'Shopie' || newExpOwner === 'Both') && (
                         <div className="space-y-2">
                           <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">
                             {lang === 'fr' ? 'MONTANT MONIQUE' : 'MONIQUE AMOUNT'}
                           </label>
                           <div className="relative">
-                            <input type="number" value={newExpAmtMonique || ''} onChange={(e) => setNewExpAmtMonique(Number(e.target.value))} className="w-full px-4 py-4 bg-bgGray border-2 border-gold/20 rounded-2xl text-xs text-royal outline-none font-bold"/><span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-gold">€</span>
+                            <input type="number" value={newExpAmtShopie || ''} onChange={(e) => setNewExpAmtShopie(Number(e.target.value))} className="w-full px-4 py-4 bg-bgGray border-2 border-gold/20 rounded-2xl text-xs text-royal outline-none font-bold"/><span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-gold">€</span>
                           </div>
                         </div>
                       )}
@@ -759,14 +759,14 @@ const MobileFinances: React.FC<MobileFinancesProps> = ({
                         {lang === 'fr' ? 'RETOUR' : 'BACK'}
                       </button>
                       <button onClick={() => {
-                        if (newExpDesc && (newExpAmtJean > 0 || newExpAmtMonique > 0)) {
+                        if (newExpDesc && (newExpAmtFlorian > 0 || newExpAmtShopie > 0)) {
                           const id = Date.now().toString();
                           const newEntries: Expense[] = [];
-                          if (newExpOwner === 'Jean' || newExpOwner === 'Both') {
-                             if (newExpAmtJean > 0) newEntries.push({ id: id + '-j', desc: newExpDesc, cat: newExpCat, amt: newExpAmtJean, rec: newExpIsRecurrent, owner: 'Jean', date: newExpDate });
+                          if (newExpOwner === 'Florian' || newExpOwner === 'Both') {
+                             if (newExpAmtFlorian > 0) newEntries.push({ id: id + '-j', desc: newExpDesc, cat: newExpCat, amt: newExpAmtFlorian, rec: newExpIsRecurrent, owner: 'Florian', date: newExpDate });
                           }
-                          if (newExpOwner === 'Monique' || newExpOwner === 'Both') {
-                             if (newExpAmtMonique > 0) newEntries.push({ id: id + '-m', desc: newExpDesc, cat: newExpCat, amt: newExpAmtMonique, rec: newExpIsRecurrent, owner: 'Monique', date: newExpDate });
+                          if (newExpOwner === 'Shopie' || newExpOwner === 'Both') {
+                             if (newExpAmtShopie > 0) newEntries.push({ id: id + '-m', desc: newExpDesc, cat: newExpCat, amt: newExpAmtShopie, rec: newExpIsRecurrent, owner: 'Shopie', date: newExpDate });
                           }
                           setExpenses([...expenses, ...newEntries]);
                           setIsAddingExpense(false);

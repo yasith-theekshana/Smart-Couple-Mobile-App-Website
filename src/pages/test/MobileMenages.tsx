@@ -41,7 +41,7 @@ const MobileMenages: React.FC<MobileMenagesProps> = ({ onBack, initialView = 'da
   const [newTask, setNewTask] = useState({
     name: '',
     category: '',
-    assignedTo: 'Jean' as 'Jean' | 'Monique' | 'Jean & Monique',
+    assignedTo: 'Florian' as 'Florian' | 'Shopie' | 'Florian & Shopie',
     date: new Date().toISOString().split('T')[0],
     isRecurrent: false
   });
@@ -140,7 +140,7 @@ const MobileMenages: React.FC<MobileMenagesProps> = ({ onBack, initialView = 'da
     setIsModalOpen(false);
     setModalStep(1);
     setEditingTaskId(null);
-    setNewTask({ name: '', category: '', assignedTo: 'Jean', date: new Date().toISOString().split('T')[0], isRecurrent: false });
+    setNewTask({ name: '', category: '', assignedTo: 'Florian', date: new Date().toISOString().split('T')[0], isRecurrent: false });
   };
 
   const handleEditTask = (task: Task) => {
@@ -217,7 +217,7 @@ const MobileMenages: React.FC<MobileMenagesProps> = ({ onBack, initialView = 'da
                   if (btn.id === 'dashboard') { setView('dashboard'); setSelectedCategory(null); }
                   else if (btn.id === 'create') {
                     setEditingTaskId(null);
-                    setNewTask({ name: '', category: '', assignedTo: 'Jean', date: new Date().toISOString().split('T')[0], isRecurrent: false });
+                    setNewTask({ name: '', category: '', assignedTo: 'Florian', date: new Date().toISOString().split('T')[0], isRecurrent: false });
                     setIsReadOnly(false);
                     setModalStep(1);
                     setIsModalOpen(true);
@@ -363,7 +363,7 @@ const MobileMenages: React.FC<MobileMenagesProps> = ({ onBack, initialView = 'da
                       
                       <div className="flex flex-col">
                         <span className={`inline-block px-2 py-0.5 rounded-md text-[9px] font-bold bg-gold text-white uppercase tracking-widest mb-1 w-fit ${task.status === 'Terminé' ? 'opacity-60' : ''}`}>
-                          {task.assignedTo === 'Jean & Monique' && lang === 'en' ? 'Jean & Monique' : task.assignedTo}
+                          {task.assignedTo === 'Florian & Shopie' && lang === 'en' ? 'Florian & Shopie' : task.assignedTo}
                         </span>
                         <div className={`flex items-center gap-2 ${task.status === 'Terminé' ? 'opacity-60' : ''}`}>
                           <span className="text-[8px] text-gray-400 uppercase tracking-widest font-black">
@@ -467,7 +467,7 @@ const MobileMenages: React.FC<MobileMenagesProps> = ({ onBack, initialView = 'da
                       {lang === 'fr' ? 'Responsable' : 'Assignee'}
                     </label>
                     <div className="grid grid-cols-3 gap-3">
-                      {['Jean', 'Monique', 'Jean & Monique'].map(person => (
+                      {['Florian', 'Shopie', 'Florian & Shopie'].map(person => (
                         <button key={person} onClick={() => setNewTask({ ...newTask, assignedTo: person as any })} className={`py-3 rounded-xl text-[9px] font-bold uppercase tracking-widest transition-all ${newTask.assignedTo === person ? 'bg-royal text-white shadow-md' : 'bg-bgGray text-royal/40'}`}>{person}</button>
                       ))}
                     </div>
